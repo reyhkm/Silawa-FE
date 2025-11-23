@@ -6,7 +6,12 @@ import { IconAlertCircle, IconSearch } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { PublicReport } from '../types';
 
-const ReportStatusCard = ({ data }: { data: PublicReport }) => (
+// --- PERUBAHAN UTAMA ADA DI DALAM KOMPONEN INI ---
+const ReportStatusCard = ({ data }: { data: PublicReport }) => {
+  // Dapatkan base URL dari environment variable
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
+
+  return (
     <Card shadow="sm" padding="lg" radius="md" withBorder mt="xl">
         <Group justify="space-between" mt="md" mb="xs">
             <Text fw={500}>{data.title}</Text>
@@ -27,7 +32,8 @@ const ReportStatusCard = ({ data }: { data: PublicReport }) => (
                 <Image
                     radius="md"
                     mt="sm"
-                    src={`/api/reports/photo/${data.photo_key}`}
+                    // Gunakan URL absolut yang digabungkan dengan path API
+                    src={`${apiBaseUrl}/api/reports/photo/${data.photo_key}`}
                     alt="Foto Laporan"
                     mah={400}
                     w="auto"
@@ -35,7 +41,9 @@ const ReportStatusCard = ({ data }: { data: PublicReport }) => (
             </Box>
         )}
     </Card>
-);
+  );
+};
+// --- AKHIR DARI PERUBAHAN ---
 
 function LacakPage() {
   const [ticketId, setTicketId] = useState('');
@@ -44,7 +52,7 @@ function LacakPage() {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ['report', submittedTicketId],
     queryFn: () => getReportByTicketId(submittedTicketId),
-    enabled: !!submittedTicketId, // Only run query if submittedTicketId is not empty
+    enabled: !!submittedTicketId,
     retry: false,
   });
 
