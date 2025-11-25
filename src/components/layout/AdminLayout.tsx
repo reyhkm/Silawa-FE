@@ -7,14 +7,14 @@ import { IconDashboard, IconLogout, IconSettings, IconChevronDown, IconUser } fr
 // --- KOMPONEN USER MENU (HEADER) ---
 function UserMenu() {
   const { logout } = useAuth();
-  const [userMenuOpened, { toggle: toggleUserMenu }] = useDisclosure(false);
+  // PERBAIKAN: Menghapus useDisclosure yang tidak terpakai.
+  // Menu Mantine menangani state buka/tutup secara otomatis.
 
   return (
     <Menu
       width={260}
       position="bottom-end"
       transitionProps={{ transition: 'pop-top-right' }}
-      onClose={() => toggleUserMenu()}
       withinPortal
     >
       <Menu.Target>
@@ -55,8 +55,6 @@ function AdminNavbar({ closeMobile }: { closeMobile: () => void }) {
   // Data menu navigasi
   const data = [
     { link: '/admin/dashboard', label: 'Dashboard', icon: IconDashboard },
-    // Bisa tambahkan menu lain di sini nanti, misal:
-    // { link: '/admin/users', label: 'Pengguna', icon: IconUsers },
   ];
 
   const links = data.map((item) => (
@@ -96,7 +94,7 @@ function AdminLayout() {
         collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
       }}
       padding="md"
-      layout="alt" // Layout alternatif: Navbar menyatu dengan sisi kiri, Header di sebelahnya
+      layout="alt"
     >
       <AppShell.Header>
         <Group h="100%" px="md" justify="space-between">
@@ -111,12 +109,10 @@ function AdminLayout() {
 
       <AppShell.Navbar p="md" style={{ borderRight: '1px solid var(--mantine-color-gray-2)' }}>
         <Group px="md" mb="xl" mt="xs">
-           {/* Logo di Sidebar untuk tampilan Desktop */}
            <Title order={3} c="brandBlue.9">SILAWA</Title>
         </Group>
         <AdminNavbar closeMobile={closeMobile} />
         
-        {/* Footer Sidebar (Opsional) */}
         <Box p="md" mt="auto" style={{ borderTop: '1px solid var(--mantine-color-gray-2)' }}>
             <Group gap="xs">
                 <Avatar size="sm" radius="xl" color="blue"><IconUser size={14}/></Avatar>
@@ -129,7 +125,6 @@ function AdminLayout() {
       </AppShell.Navbar>
 
       <AppShell.Main bg="gray.0">
-        {/* Container membatasi lebar konten agar tidak terlalu melebar di layar ultrawide */}
         <Container fluid p="md">
              <Outlet />
         </Container>
