@@ -34,7 +34,6 @@ function HomePage() {
                 Layanan Aspirasi dan Pengaduan Online Warga
               </Title>
               <Text c="dimmed" size="lg" mt="md">
-                Sampaikan laporan Anda langsung kepada instansi pemerintah berwenang. 
                 Berani lapor untuk pelayanan publik yang lebih baik.
               </Text>
 
