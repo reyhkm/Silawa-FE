@@ -1,16 +1,15 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getReportDetail, updateReport, getProtectedImage, deleteReport } from '../../api/reports';
-import { Alert, Grid, Paper, Title, Text, Image, Box, Skeleton, Button, Modal, Group } from '@mantine/core'; // Hapus Loader
+import { getReportDetail, updateReport, getProtectedImage } from '../../api/reports'; // Hapus deleteReport
+import { Alert, Grid, Paper, Title, Text, Image, Box, Skeleton } from '@mantine/core'; // Hapus Button, Modal, Group
 import { IconAlertCircle } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import ManagementForm from '../../components/admin/ManagementForm';
 import { notifications } from '@mantine/notifications';
 import { Report } from '../../types';
 import { useEffect } from 'react';
-import { useDisclosure } from '@mantine/hooks';
 
-// ... (Komponen ProtectedImage tetap sama) ...
+// --- KOMPONEN GAMBAR (Tetap Sama) ---
 const ProtectedImage = ({ photoKey }: { photoKey: string }) => {
   const queryClient = useQueryClient();
   const queryKey = ['protectedImage', photoKey];
@@ -51,7 +50,7 @@ const ProtectedImage = ({ photoKey }: { photoKey: string }) => {
   );
 };
 
-// --- KOMPONEN BARU: SKELETON DETAIL ---
+// --- KOMPONEN SKELETON (Tetap Sama - Agar Loading Bagus) ---
 const DetailSkeleton = () => (
   <Grid>
     <Grid.Col span={{ base: 12, md: 7 }}>
@@ -81,8 +80,6 @@ const DetailSkeleton = () => (
 function ReportDetailPage() {
   const { id } = useParams<{ id: string }>();
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
-  const [opened, { open, close }] = useDisclosure(false);
 
   const { data: report, isLoading, error } = useQuery({
     queryKey: ['adminReport', id],
@@ -110,32 +107,8 @@ function ReportDetailPage() {
     },
   });
 
-  const deleteMutation = useMutation({
-    mutationFn: deleteReport,
-    onSuccess: () => {
-      notifications.show({
-        title: 'Sukses',
-        message: 'Laporan telah berhasil dibatalkan.',
-        color: 'green',
-      });
-      queryClient.invalidateQueries({ queryKey: ['adminReports'] });
-      navigate('/admin/dashboard');
-    },
-    onError: () => {
-      notifications.show({
-        title: 'Gagal',
-        message: 'Gagal membatalkan laporan.',
-        color: 'red',
-      });
-    },
-  });
+  // --- BAGIAN DELETE DIHAPUS TOTAL DI SINI ---
 
-  const handleDelete = () => {
-    deleteMutation.mutate(id!);
-    close();
-  };
-
-  // --- PERBAIKAN DI SINI: Gunakan Skeleton ---
   if (isLoading) return <DetailSkeleton />;
 
   if (error || !report) {
@@ -151,54 +124,34 @@ function ReportDetailPage() {
   };
 
   return (
-    <>
-      <Modal opened={opened} onClose={close} title="Konfirmasi Pembatalan Laporan" centered>
-        <Text>Apakah Anda yakin ingin membatalkan laporan ini? Tindakan ini akan menyembunyikan laporan dari daftar utama, tetapi data tidak akan dihapus permanen.</Text>
-        <Group justify="flex-end" mt="md">
-          <Button variant="default" onClick={close}>Tidak</Button>
-          <Button color="red" onClick={handleDelete} loading={deleteMutation.isPending}>
-            Ya, Batalkan Laporan
-          </Button>
-        </Group>
-      </Modal>
-
-      <Grid>
-        <Grid.Col span={{ base: 12, md: 7 }}>
-          <Paper shadow="sm" p="md" withBorder>
-            <Title order={3}>{report.title}</Title>
-            <Text c="dimmed" size="sm">Tiket: {report.ticket_id}</Text>
-            <Text mt="md"><strong>Pelapor:</strong> {report.reporter_name}</Text>
-            <Text><strong>Kontak:</strong> {report.reporter_contact}</Text>
-            <Text><strong>Lokasi:</strong> {report.location}</Text>
-            <Text><strong>Dilaporkan pada:</strong> {dayjs(report.created_at).format('DD MMMM YYYY, HH:mm')}</Text>
-            <Text mt="lg"><strong>Deskripsi:</strong></Text>
-            <Text>{report.description}</Text>
-            {report.photo_key && (
-              <Box mt="lg">
-                <Text fw={500}>Foto:</Text>
-                <ProtectedImage photoKey={report.photo_key} />
-              </Box>
-            )}
-          </Paper>
-        </Grid.Col>
-        <Grid.Col span={{ base: 12, md: 5 }}>
-          <Paper shadow="sm" p="md" withBorder>
-            <Title order={3} mb="md">Manajemen Laporan</Title>
-            <ManagementForm report={report} onSubmit={handleUpdate} isLoading={updateMutation.isPending} />
-            
-            <Button
-              variant="outline"
-              color="red"
-              fullWidth
-              mt="lg"
-              onClick={open}
-            >
-              Batalkan Laporan Ini
-            </Button>
-          </Paper>
-        </Grid.Col>
-      </Grid>
-    </>
+    <Grid>
+      <Grid.Col span={{ base: 12, md: 7 }}>
+        <Paper shadow="sm" p="md" withBorder>
+          <Title order={3}>{report.title}</Title>
+          <Text c="dimmed" size="sm">Tiket: {report.ticket_id}</Text>
+          <Text mt="md"><strong>Pelapor:</strong> {report.reporter_name}</Text>
+          <Text><strong>Kontak:</strong> {report.reporter_contact}</Text>
+          <Text><strong>Lokasi:</strong> {report.location}</Text>
+          <Text><strong>Dilaporkan pada:</strong> {dayjs(report.created_at).format('DD MMMM YYYY, HH:mm')}</Text>
+          <Text mt="lg"><strong>Deskripsi:</strong></Text>
+          <Text>{report.description}</Text>
+          {report.photo_key && (
+            <Box mt="lg">
+              <Text fw={500}>Foto:</Text>
+              <ProtectedImage photoKey={report.photo_key} />
+            </Box>
+          )}
+        </Paper>
+      </Grid.Col>
+      <Grid.Col span={{ base: 12, md: 5 }}>
+        <Paper shadow="sm" p="md" withBorder>
+          <Title order={3} mb="md">Manajemen Laporan</Title>
+          <ManagementForm report={report} onSubmit={handleUpdate} isLoading={updateMutation.isPending} />
+          
+          {/* TOMBOL DELETE SUDAH DIHAPUS */}
+        </Paper>
+      </Grid.Col>
+    </Grid>
   );
 }
 
