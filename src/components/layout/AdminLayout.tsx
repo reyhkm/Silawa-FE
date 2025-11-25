@@ -2,13 +2,12 @@ import { AppShell, Burger, Group, Text, Title, Box, NavLink, Avatar, Menu, Unsty
 import { useDisclosure } from '@mantine/hooks';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { IconDashboard, IconLogout, IconSettings, IconChevronDown, IconUser } from '@tabler/icons-react';
+// PERBAIKAN: Menghapus IconSettings dari import karena tidak dipakai lagi
+import { IconDashboard, IconLogout, IconChevronDown, IconUser } from '@tabler/icons-react';
 
 // --- KOMPONEN USER MENU (HEADER) ---
 function UserMenu() {
   const { logout } = useAuth();
-  // PERBAIKAN: Menghapus useDisclosure yang tidak terpakai.
-  // Menu Mantine menangani state buka/tutup secara otomatis.
 
   return (
     <Menu
@@ -30,11 +29,8 @@ function UserMenu() {
         </UnstyledButton>
       </Menu.Target>
       <Menu.Dropdown>
-        <Menu.Label>Pengaturan Akun</Menu.Label>
-        <Menu.Item leftSection={<IconSettings style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}>
-          Pengaturan
-        </Menu.Item>
-        <Menu.Divider />
+        {/* PERBAIKAN: Menghapus menu Pengaturan, langsung ke Logout */}
+        <Menu.Label>Sesi</Menu.Label>
         <Menu.Item
           color="red"
           leftSection={<IconLogout style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
