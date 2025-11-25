@@ -33,14 +33,15 @@ function PublicFooter() {
 }
 
 export function PublicLayout() {
-  // Baris `const [opened, { toggle }] = useDisclosure();` telah dihapus
   return (
     <AppShell header={{ height: 60 }} padding="md">
       <AppShell.Header>
         <PublicHeader />
       </AppShell.Header>
 
-      <AppShell.Main bg="gray.0">
+      {/* --- PERUBAHAN DI SINI: bg="gray.0" DIHAPUS --- */}
+      {/* Sekarang background akan otomatis menyesuaikan (Putih di Light Mode, Gelap di Dark Mode) */}
+      <AppShell.Main>
         <Outlet />
       </AppShell.Main>
 
