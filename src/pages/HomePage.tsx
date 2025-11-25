@@ -1,5 +1,6 @@
 import { Container, Title, Paper, Text, SimpleGrid, ThemeIcon, List, rem, Box, Stack } from '@mantine/core';
-import { IconCheck, IconShieldCheck, IconRocket, IconEar, IconSpeakerphone, IconDeviceLaptop } from '@tabler/icons-react';
+// PERBAIKAN: Menghapus IconEar dan IconDeviceLaptop yang tidak terpakai
+import { IconCheck, IconShieldCheck, IconRocket, IconSpeakerphone } from '@tabler/icons-react';
 import ReportForm from '../components/forms/ReportForm';
 
 // Komponen untuk fitur/keunggulan
