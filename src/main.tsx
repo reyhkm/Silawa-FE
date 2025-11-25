@@ -7,15 +7,15 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
-import { theme } from './theme'; // <-- 1. Import tema
+import { theme } from './theme';
 
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      {/* --- 2. Terapkan tema di sini --- */}
-      <MantineProvider theme={theme} defaultColorScheme="auto">
+      {/* --- PERUBAHAN DI SINI: Ganti "auto" menjadi "light" --- */}
+      <MantineProvider theme={theme} defaultColorScheme="light">
         <Notifications />
         <BrowserRouter>
           <App />
