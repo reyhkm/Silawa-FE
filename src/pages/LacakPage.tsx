@@ -1,14 +1,13 @@
 import { useState } from 'react';
-import { Container, Title, Paper, TextInput, Button, Box, Alert, Text, Loader, Card, Group, Badge, Image } from '@mantine/core';
+import { Container, Title, Paper, TextInput, Button, Box, Alert, Text, Card, Group, Badge, Image, Skeleton } from '@mantine/core'; // Tambah Skeleton, Hapus Loader
 import { useQuery } from '@tanstack/react-query';
 import { getReportByTicketId } from '../api/reports';
 import { IconAlertCircle, IconSearch } from '@tabler/icons-react';
 import dayjs from 'dayjs';
 import { PublicReport } from '../types';
 
-// --- PERUBAHAN UTAMA ADA DI DALAM KOMPONEN INI ---
+// ... (ReportStatusCard tetap sama) ...
 const ReportStatusCard = ({ data }: { data: PublicReport }) => {
-  // Dapatkan base URL dari environment variable
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
 
   return (
@@ -32,7 +31,6 @@ const ReportStatusCard = ({ data }: { data: PublicReport }) => {
                 <Image
                     radius="md"
                     mt="sm"
-                    // Gunakan URL absolut yang digabungkan dengan path API
                     src={`${apiBaseUrl}/api/reports/photo/${data.photo_key}`}
                     alt="Foto Laporan"
                     mah={400}
@@ -43,7 +41,20 @@ const ReportStatusCard = ({ data }: { data: PublicReport }) => {
     </Card>
   );
 };
-// --- AKHIR DARI PERUBAHAN ---
+
+// --- KOMPONEN BARU: SKELETON CARD ---
+const ReportCardSkeleton = () => (
+  <Card shadow="sm" padding="lg" radius="md" withBorder mt="xl">
+    <Group justify="space-between" mt="md" mb="xs">
+        <Skeleton height={20} width="60%" radius="xl" />
+        <Skeleton height={20} width={80} radius="xl" />
+    </Group>
+    <Skeleton height={15} width="40%" mt="sm" radius="xl" />
+    <Skeleton height={15} width="90%" mt="lg" radius="xl" />
+    <Skeleton height={15} width="80%" mt="xs" radius="xl" />
+    <Skeleton height={200} mt="lg" radius="md" />
+  </Card>
+);
 
 function LacakPage() {
   const [ticketId, setTicketId] = useState('');
@@ -87,7 +98,9 @@ function LacakPage() {
       </Paper>
 
       <Box mt="xl">
-        {isLoading && <Loader style={{ display: 'block', margin: 'auto' }} />}
+        {/* --- PERBAIKAN DI SINI: Gunakan Skeleton --- */}
+        {isLoading && <ReportCardSkeleton />}
+        
         {error && (
           <Alert icon={<IconAlertCircle size="1rem" />} title="Gagal!" color="red">
             Laporan dengan nomor tiket tersebut tidak ditemukan.
