@@ -1,5 +1,4 @@
-import { AppShell, Burger, Group, Button, Title, Box, Text, Anchor } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { AppShell, Group, Button, Title, Box, Text } from '@mantine/core';
 import { Outlet, useNavigate, Link } from 'react-router-dom';
 import { IconReportAnalytics } from '@tabler/icons-react';
 
@@ -34,8 +33,7 @@ function PublicFooter() {
 }
 
 export function PublicLayout() {
-  const [opened, { toggle }] = useDisclosure();
-
+  // Baris `const [opened, { toggle }] = useDisclosure();` telah dihapus
   return (
     <AppShell header={{ height: 60 }} padding="md">
       <AppShell.Header>
