@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { getAllAdminReports } from '../../api/reports';
-import { Table, Loader, Alert, Title, Text, Paper, SimpleGrid, Group } from '@mantine/core';
+import { Table, Alert, Title, Text, Paper, SimpleGrid, Group, Skeleton } from '@mantine/core'; // Tambah Skeleton
 import { IconAlertCircle, IconCircleCheck, IconClockHour4, IconListDetails } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import StatusBadge from '../../components/common/StatusBadge';
 import { AdminReportListItem } from '../../types';
 
+// ... (Kode StatCard tetap sama, tidak perlu diubah) ...
 interface StatCardProps {
   title: string;
   value: number;
@@ -30,6 +31,28 @@ function StatCard({ title, value, icon, color }: StatCardProps) {
   );
 }
 
+// --- KOMPONEN BARU: SKELETON TABLE ---
+function DashboardSkeleton() {
+  return (
+    <>
+      <Skeleton height={40} width={200} mb="lg" /> {/* Judul */}
+      <SimpleGrid cols={{ base: 1, sm: 2, lg: 3 }} mb="xl">
+        <Skeleton height={120} radius="md" />
+        <Skeleton height={120} radius="md" />
+        <Skeleton height={120} radius="md" />
+      </SimpleGrid>
+      <Paper withBorder p="md" radius="md">
+        <Skeleton height={30} width={150} mb="md" />
+        <Skeleton height={20} width={300} mb="lg" />
+        {/* Simulasi 5 baris tabel */}
+        {[1, 2, 3, 4, 5].map((i) => (
+          <Skeleton key={i} height={50} mt="sm" radius="sm" />
+        ))}
+      </Paper>
+    </>
+  );
+}
+
 function DashboardPage() {
   const navigate = useNavigate();
   const { data: reports, isLoading, error } = useQuery({
@@ -37,8 +60,9 @@ function DashboardPage() {
     queryFn: getAllAdminReports,
   });
 
+  // --- PERBAIKAN DI SINI: Gunakan Skeleton ---
   if (isLoading) {
-    return <Loader />;
+    return <DashboardSkeleton />;
   }
 
   if (error) {
@@ -49,6 +73,7 @@ function DashboardPage() {
     );
   }
 
+  // ... (Sisa kode logika stats dan render tabel tetap sama persis) ...
   const stats = (reports || []).reduce(
     (acc, report) => {
       if (report.status === 'Diterima') acc.diterima += 1;
