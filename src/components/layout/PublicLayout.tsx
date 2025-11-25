@@ -1,4 +1,4 @@
-import { AppShell, Group, Button, Title, Box, Text, Container, Stack, Burger, Drawer, Divider, ScrollArea, rem } from '@mantine/core';
+import { AppShell, Group, Button, Title, Box, Text, Container, Stack, Burger, Drawer, Divider, ScrollArea, rem, SimpleGrid } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { Outlet, useNavigate, Link, useLocation } from 'react-router-dom';
 import { IconReportAnalytics, IconBuildingArch, IconPhone, IconMail } from '@tabler/icons-react';
@@ -7,8 +7,6 @@ import { IconReportAnalytics, IconBuildingArch, IconPhone, IconMail } from '@tab
 function PublicHeader({ opened, toggle }: { opened: boolean; toggle: () => void }) {
   const navigate = useNavigate();
   const location = useLocation();
-
-  // Cek rute aktif untuk styling tombol
   const isActive = (path: string) => location.pathname === path;
 
   return (
@@ -21,12 +19,11 @@ function PublicHeader({ opened, toggle }: { opened: boolean; toggle: () => void 
           </Box>
           <Box>
             <Title order={4} c="brandBlue.9" lh={1.1}>SILAWA</Title>
-            {/* PERBAIKAN DI SINI: Mengganti ls={1} dengan style manual */}
             <Text size="10px" c="dimmed" tt="uppercase" fw={700} style={{ letterSpacing: '1px' }}>Pelayanan Publik</Text>
           </Box>
         </Group>
 
-        {/* DESKTOP NAVIGATION (Hidden on Mobile) */}
+        {/* DESKTOP NAVIGATION */}
         <Group visibleFrom="sm" gap="sm">
           <Button 
             component={Link} 
@@ -48,54 +45,65 @@ function PublicHeader({ opened, toggle }: { opened: boolean; toggle: () => void 
           </Button>
         </Group>
 
-        {/* MOBILE BURGER (Hidden on Desktop) */}
+        {/* MOBILE BURGER */}
         <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
       </Group>
     </Container>
   );
 }
 
-// --- KOMPONEN FOOTER ---
+// --- KOMPONEN FOOTER (DIPERBAIKI) ---
 function PublicFooter() {
   return (
-    <Box bg="brandBlue.9" c="white" py={40} mt={60}>
+    <Box bg="brandBlue.9" c="white" py={60} mt={60}>
       <Container size="lg">
-        <Group justify="space-between" align="flex-start">
+        {/* 
+            MENGGUNAKAN SIMPLEGRID:
+            - base: 1 (1 kolom di HP -> Rapi ke bawah)
+            - sm: 3 (3 kolom di Tablet/Laptop -> Rapi ke samping)
+        */}
+        <SimpleGrid cols={{ base: 1, sm: 3 }} spacing={50}>
           
-          {/* Kolom 1: Brand */}
-          <Stack gap="xs" maw={300}>
-            <Group gap="xs" align="center">
+          {/* Kolom 1: Brand & Deskripsi */}
+          <Stack gap="md">
+            <Group gap="xs">
                 <IconBuildingArch size={32} color="white" style={{ opacity: 0.9 }} />
                 <Title order={3} c="white">SILAWA</Title>
             </Group>
-            <Text size="sm" c="gray.3" lh={1.6}>
+            <Text size="sm" c="gray.3" lh={1.6} maw={300}>
               Platform digital resmi untuk penyampaian aspirasi dan pengaduan masyarakat. Transparan, Cepat, dan Terukur.
             </Text>
           </Stack>
 
           {/* Kolom 2: Kontak */}
-          <Stack gap="xs">
-            <Text fw={700} size="lg" mb={4}>Hubungi Kami</Text>
-            <Group gap="xs">
-                <IconPhone size={18} color="var(--mantine-color-gray-4)" />
-                <Text size="sm" c="gray.3">112 (Bebas Pulsa)</Text>
-            </Group>
-            <Group gap="xs">
-                <IconMail size={18} color="var(--mantine-color-gray-4)" />
-                <Text size="sm" c="gray.3">pengaduan@pemerintah.go.id</Text>
-            </Group>
+          <Stack gap="md">
+            <Title order={5} c="white">Hubungi Kami</Title>
+            <Stack gap="xs">
+                <Group gap="xs" wrap="nowrap">
+                    <IconPhone size={18} color="var(--mantine-color-gray-4)" style={{ flexShrink: 0 }} />
+                    <Text size="sm" c="gray.3">112 (Bebas Pulsa)</Text>
+                </Group>
+                <Group gap="xs" wrap="nowrap">
+                    <IconMail size={18} color="var(--mantine-color-gray-4)" style={{ flexShrink: 0 }} />
+                    <Text size="sm" c="gray.3">pengaduan@pemerintah.go.id</Text>
+                </Group>
+            </Stack>
           </Stack>
 
-          {/* Kolom 3: Copyright */}
-          <Stack gap="xs" align="flex-end">
-             <Text fw={700} size="lg" mb={4}>Legalitas</Text>
-             <Text size="sm" c="gray.3" ta="right">
-                © {new Date().getFullYear()} Pemerintah Daerah.<br />
-                Hak Cipta Dilindungi Undang-Undang.
-             </Text>
+          {/* Kolom 3: Legalitas */}
+          <Stack gap="md">
+             <Title order={5} c="white">Legalitas</Title>
+             <Box>
+                <Text size="sm" c="gray.3">
+                    © {new Date().getFullYear()} Pemerintah Daerah.
+                </Text>
+                <Text size="sm" c="gray.3">
+                    Hak Cipta Dilindungi Undang-Undang.
+                </Text>
+             </Box>
           </Stack>
 
-        </Group>
+        </SimpleGrid>
       </Container>
     </Box>
   );
@@ -111,12 +119,10 @@ export function PublicLayout() {
       padding={0} 
       withBorder={false}
     >
-      {/* HEADER DENGAN SHADOW HALUS */}
       <AppShell.Header style={{ borderBottom: '1px solid #e9ecef', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
          <PublicHeader opened={opened} toggle={toggle} />
       </AppShell.Header>
 
-      {/* DRAWER UNTUK MOBILE MENU */}
       <Drawer
         opened={opened}
         onClose={close}
@@ -139,7 +145,6 @@ export function PublicLayout() {
         </ScrollArea>
       </Drawer>
 
-      {/* KONTEN UTAMA */}
       <AppShell.Main style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#F8F9FA' }}>
         <Box style={{ flex: 1 }} py="xl">
             <Container size="lg">
