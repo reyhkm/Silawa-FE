@@ -6,16 +6,21 @@ import DashboardPage from '../pages/admin/DashboardPage';
 import ReportDetailPage from '../pages/admin/ReportDetailPage';
 import ProtectedRoute from './ProtectedRoute';
 import AdminLayout from '../components/layout/AdminLayout';
+import { PublicLayout } from '../components/layout/PublicLayout'; // <-- Import
 
 export function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/lacak" element={<LacakPage />} />
-      <Route path="/admin/login" element={<LoginPage />} />
+      {/* --- Rute Publik dengan Layout Baru --- */}
+      <Route element={<PublicLayout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/lacak" element={<LacakPage />} />
+      </Route>
 
-      <Route 
-        path="/admin" 
+      {/* --- Rute Admin tetap sama --- */}
+      <Route path="/admin/login" element={<LoginPage />} />
+      <Route
+        path="/admin"
         element={
           <ProtectedRoute>
             <AdminLayout />
