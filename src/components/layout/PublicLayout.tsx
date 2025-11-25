@@ -21,7 +21,8 @@ function PublicHeader({ opened, toggle }: { opened: boolean; toggle: () => void 
           </Box>
           <Box>
             <Title order={4} c="brandBlue.9" lh={1.1}>SILAWA</Title>
-            <Text size="10px" c="dimmed" tt="uppercase" fw={700} ls={1}>Pelayanan Publik</Text>
+            {/* PERBAIKAN DI SINI: Mengganti ls={1} dengan style manual */}
+            <Text size="10px" c="dimmed" tt="uppercase" fw={700} style={{ letterSpacing: '1px' }}>Pelayanan Publik</Text>
           </Box>
         </Group>
 
@@ -72,7 +73,7 @@ function PublicFooter() {
             </Text>
           </Stack>
 
-          {/* Kolom 2: Kontak (Opsional tapi penting utk Gov site) */}
+          {/* Kolom 2: Kontak */}
           <Stack gap="xs">
             <Text fw={700} size="lg" mb={4}>Hubungi Kami</Text>
             <Group gap="xs">
@@ -141,7 +142,6 @@ export function PublicLayout() {
       {/* KONTEN UTAMA */}
       <AppShell.Main style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', backgroundColor: '#F8F9FA' }}>
         <Box style={{ flex: 1 }} py="xl">
-            {/* Container konten dibatasi agar enak dibaca (Readability) */}
             <Container size="lg">
                 <Outlet />
             </Container>
